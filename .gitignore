@@ -1,0 +1,36 @@
+# === Результаты компиляции и сборки (Artifacts) ===
+[Dd]ebug/
+[Dd]ebugPS/
+[Rr]elease/
+[Rr]eleasePS/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+
+# === Локальные папки инструментов .NET (включая миграции) ===
+.dotnet/
+.tools/
+
+# === Настройки сред разработки (IDE) ===
+# Visual Studio
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+!.vscode/extensions.json
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# === Локальные файлы конфигураций (на случай, если будете хранить пароли отдельно) ===
+*.local.json
+appsettings.Development.json
+
+# === Системные файлы ===
+.DS_Store
+Thumbs.db
