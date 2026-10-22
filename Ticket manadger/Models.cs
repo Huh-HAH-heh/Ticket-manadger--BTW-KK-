@@ -1,4 +1,4 @@
-﻿using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,13 +14,13 @@ namespace Ticket_manadger
         [Required]
         [MaxLength(100)]
         [Column("title")]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
         [Required]
 
         [Column("description", TypeName = "text")]
         public string description { get; set; } = null!;
    
-        [Column("craatedAt")]
+        [Column("CraatedAt")]
         public DateTime CraatedAt { get; set; } = DateTime.UtcNow;
         
 
@@ -43,8 +43,8 @@ namespace Ticket_manadger
         public int Id { get; set; }
         [Required]
         [MaxLength(100)]
-        [Column("fullName ")]
-        public string FullName { get; set; }
+        [Column("fullName")]
+        public string FullName { get; set; } = null!;
         [Required]
         [MaxLength(40)]
         [Column("role")]
