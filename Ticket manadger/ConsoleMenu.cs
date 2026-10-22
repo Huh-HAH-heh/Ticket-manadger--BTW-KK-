@@ -211,7 +211,7 @@ namespace Ticket_manadger
                 Console.WriteLine($"  {status.Id}. {status.Name}");
 
             var statusChoice = ReadNonNegativeInt("ID статуса: ");
-            var statusId = statusChoice == 0 ? null : statusChoice;
+            int? statusId = statusChoice == 0 ? null : statusChoice;
 
             Console.WriteLine("Сортировка:");
             Console.WriteLine("  1. Сначала новые");
