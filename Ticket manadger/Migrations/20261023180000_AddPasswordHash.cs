@@ -8,6 +8,16 @@ namespace Ticket_manadger.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.RenameColumn(
+                name: "craatedAt",
+                table: "requests",
+                newName: "CraatedAt");
+
+            migrationBuilder.RenameColumn(
+                name: "fullName ",
+                table: "users",
+                newName: "fullName");
+
             migrationBuilder.AddColumn<string>(
                 name: "passwordHash",
                 table: "users",
@@ -18,9 +28,11 @@ namespace Ticket_manadger.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "passwordHash",
-                table: "users");
+            migrationBuilder.DropColumn(name: "passwordHash", table: "users");
+            migrationBuilder.RenameColumn(
+                name: "CraatedAt", table: "requests", newName: "craatedAt");
+            migrationBuilder.RenameColumn(
+                name: "fullName", table: "users", newName: "fullName ");
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Ticket_manadger
         [Column("description", TypeName = "text")]
         public string description { get; set; } = string.Empty;
 
-        [Column("craatedAt")]
+        [Column("CraatedAt")]
         public DateTime CraatedAt { get; set; } = DateTime.UtcNow;
 
         [Column("statusId")]
@@ -44,21 +44,31 @@ namespace Ticket_manadger
         [Column("id")]
         public int Id { get; set; }
 
+        [MaxLength(50)]
+        [Column("login")]
+        public string? Login { get; set; }
+
         [Required]
         [MaxLength(100)]
-        [Column("fullName ")]
+        [Column("fullName")]
         public string FullName { get; set; } = string.Empty;
+
+        [MaxLength(254)]
+        [Column("email")]
+        public string? Email { get; set; }
 
         [Required]
         [MaxLength(40)]
         [Column("role")]
-        public string Role { get; set; } = string.Empty;
+        public string Role { get; set; } = UserRoles.Client;
 
-        // Храним только хэш, а не исходный пароль. Поле nullable для совместимости
-        // с уже существующими пользователями, у которых пароль ещё не задан.
+        // Nullable only for legacy accounts; new accounts always store a hash.
         [MaxLength(255)]
         [Column("passwordHash")]
         public string? PasswordHash { get; set; }
+
+        [Column("isDeleted")]
+        public bool IsDeleted { get; set; }
     }
 
     [Table("statuses")]

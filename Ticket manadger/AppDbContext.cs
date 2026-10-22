@@ -23,23 +23,24 @@ namespace Ticket_manadger
 
             var connectionString = Environment.GetEnvironmentVariable("TICKET_DB_CONNECTION");
             if (string.IsNullOrWhiteSpace(connectionString))
-            {
                 throw new InvalidOperationException(
                     "Не задана строка подключения. Установите переменную окружения TICKET_DB_CONNECTION.");
-            }
 
             optionsBuilder.UseNpgsql(connectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().HasIndex(user => user.Login).IsUnique();
+            modelBuilder.Entity<User>().HasIndex(user => user.Email).IsUnique();
+
             modelBuilder.Entity<RequestStatus>().HasData(
                 new RequestStatus { Id = 1, Name = "new" },
                 new RequestStatus { Id = 2, Name = "InProgress" },
                 new RequestStatus { Id = 3, Name = "Cumplete" });
 
             modelBuilder.Entity<User>().HasData(
-                new User { Id = 1, FullName = "IVATEST", Role = "Client" });
+                new User { Id = 1, FullName = "IVATEST", Role = UserRoles.Client, IsDeleted = false });
         }
     }
 }

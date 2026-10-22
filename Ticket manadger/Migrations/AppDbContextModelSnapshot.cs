@@ -37,7 +37,7 @@ namespace Ticket_manadger.Migrations
 
                     b.Property<DateTime>("CraatedAt")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("craatedAt");
+                        .HasColumnName("CraatedAt");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("integer")
@@ -102,6 +102,17 @@ namespace Ticket_manadger.Migrations
 
             modelBuilder.Entity("Ticket_manadger.User", b =>
                 {
+                    b.Property<string>("Email")
+                        .HasMaxLength(254)
+                        .HasColumnType("character varying(254)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("fullName");
+
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
@@ -109,11 +120,14 @@ namespace Ticket_manadger.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("fullName ");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("isDeleted");
+
+                    b.Property<string>("Login")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("login");
 
                     b.Property<string>("PasswordHash")
                         .HasMaxLength(255)
@@ -127,7 +141,8 @@ namespace Ticket_manadger.Migrations
                         .HasColumnName("role");
 
                     b.HasKey("Id");
-
+                    b.HasIndex("Email").IsUnique();
+                    b.HasIndex("Login").IsUnique();
                     b.ToTable("users");
 
                     b.HasData(
@@ -135,6 +150,7 @@ namespace Ticket_manadger.Migrations
                         {
                             Id = 1,
                             FullName = "IVATEST",
+                            IsDeleted = false,
                             Role = "Client"
                         });
                 });

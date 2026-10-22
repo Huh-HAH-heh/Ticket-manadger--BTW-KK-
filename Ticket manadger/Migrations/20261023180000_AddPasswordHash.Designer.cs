@@ -39,7 +39,7 @@ namespace Ticket_manadger.Migrations
 
                     b.Property<DateTime>("CraatedAt")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("craatedAt");
+                        .HasColumnName("CraatedAt");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("integer")
@@ -115,7 +115,7 @@ namespace Ticket_manadger.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
-                        .HasColumnName("fullName ");
+                        .HasColumnName("fullName");
 
                     b.Property<string>("PasswordHash")
                         .HasMaxLength(255)
