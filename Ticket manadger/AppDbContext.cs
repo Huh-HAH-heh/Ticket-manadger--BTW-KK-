@@ -1,38 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Ticket_manadger
 {
-    public class AppDbContext:DbContext
-    { 
-        public DbSet<Request> Requests { get; set; } = null!;
-        public DbSet<RequestStatus> RequestStatus { get; set; } = null!;
+    public class AppDbContext : DbContext
+    {
+        public DbSet<Request> Requests => Set<Request>();
+        public DbSet<RequestStatus> RequestStatus => Set<RequestStatus>();
+        public DbSet<User> User => Set<User>();
 
-        public DbSet<User> User { get; set; } = null!;
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public AppDbContext()
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=ticket_db;Username=postgres;Password=my_secret_password_123");
         }
+
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (optionsBuilder.IsConfigured)
+                return;
+
+            var connectionString = Environment.GetEnvironmentVariable("TICKET_DB_CONNECTION");
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException(
+                    "Не задана строка подключения. Установите переменную окружения TICKET_DB_CONNECTION.");
+            }
+
+            optionsBuilder.UseNpgsql(connectionString);
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RequestStatus>().HasData(
                 new RequestStatus { Id = 1, Name = "new" },
                 new RequestStatus { Id = 2, Name = "InProgress" },
-    new RequestStatus { Id =3, Name = "Cumplete" });
+                new RequestStatus { Id = 3, Name = "Cumplete" });
 
             modelBuilder.Entity<User>().HasData(
-                new User { Id =1,FullName="IVATEST",Role="Client"});
-
-
-
-
+                new User { Id = 1, FullName = "IVATEST", Role = "Client" });
         }
-
-
     }
-
 }
-

@@ -115,6 +115,11 @@ namespace Ticket_manadger.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("fullName ");
 
+                    b.Property<string>("PasswordHash")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("passwordHash");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasMaxLength(40)
