@@ -5,7 +5,14 @@ Console.InputEncoding = System.Text.Encoding.UTF8;
 
 try
 {
-    new ConsoleMenu().Run();
+    var menu = new ConsoleMenu();
+    if (args.Any(argument => string.Equals(argument, "--bootstrap-admin", StringComparison.OrdinalIgnoreCase)))
+    {
+        menu.BootstrapAdministrator();
+        return;
+    }
+
+    menu.Run();
 }
 catch (Exception ex)
 {

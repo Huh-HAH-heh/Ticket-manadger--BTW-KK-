@@ -2,38 +2,29 @@
 
 namespace Ticket_manadger
 {
-    internal enum RequestSortOrder
-    {
-        NewestFirst,
-        OldestFirst,
-        TitleAscending,
-        TitleDescending,
-        Status
-    }
+    internal enum RequestSortOrder { NewestFirst, OldestFirst, TitleAscending, TitleDescending, Status }
 
     internal sealed class RequestRepo
     {
-        public List<Request> GetAllRequest() =>
-            FindRequests(null, null, RequestSortOrder.NewestFirst);
+        public List<Request> GetAllRequest(int? clientId = null) =>
+            FindRequests(null, null, RequestSortOrder.NewestFirst, clientId);
 
-        public Request? GetRequestById(int requestId)
+        public Request? GetRequestById(int requestId, int? clientId = null)
         {
             using var db = new AppDbContext();
-            return db.Requests
-                .AsNoTracking()
-                .Include(r => r.Status)
-                .Include(r => r.Client)
-                .FirstOrDefault(r => r.Id == requestId);
+            IQueryable<Request> query = db.Requests.AsNoTracking()
+                .Include(r => r.Status).Include(r => r.Client);
+            if (clientId.HasValue)
+                query = query.Where(r => r.ClientId == clientId.Value);
+            return query.FirstOrDefault(r => r.Id == requestId);
         }
 
         public List<User> GetClients()
         {
             using var db = new AppDbContext();
-            return db.User
-                .AsNoTracking()
-                .Where(user => user.Role == "Client")
-                .OrderBy(user => user.FullName)
-                .ToList();
+            return db.User.AsNoTracking()
+                .Where(user => !user.IsDeleted && user.Role == UserRoles.Client)
+                .OrderBy(user => user.FullName).ToList();
         }
 
         public List<RequestStatus> GetStatuses()
@@ -42,17 +33,15 @@ namespace Ticket_manadger
             return db.RequestStatus.AsNoTracking().OrderBy(status => status.Id).ToList();
         }
 
-        public List<Request> FindRequests(
-            string? searchText,
-            int? statusId,
-            RequestSortOrder sortOrder)
+        public List<Request> FindRequests(string? searchText, int? statusId,
+            RequestSortOrder sortOrder, int? clientId = null)
         {
             using var db = new AppDbContext();
+            IQueryable<Request> query = db.Requests.AsNoTracking()
+                .Include(r => r.Status).Include(r => r.Client);
 
-            IQueryable<Request> query = db.Requests
-                .AsNoTracking()
-                .Include(r => r.Status)
-                .Include(r => r.Client);
+            if (clientId.HasValue)
+                query = query.Where(r => r.ClientId == clientId.Value);
 
             if (!string.IsNullOrWhiteSpace(searchText))
             {
@@ -74,39 +63,30 @@ namespace Ticket_manadger
                 RequestSortOrder.Status => query.OrderBy(r => r.Status.Name).ThenByDescending(r => r.CraatedAt),
                 _ => query.OrderByDescending(r => r.CraatedAt)
             };
-
             return query.ToList();
         }
 
         public void AddRequest(string title, string description, int clientId)
         {
             ValidateRequestFields(title, description);
-
             using var db = new AppDbContext();
-            if (!db.User.Any(user => user.Id == clientId && user.Role == "Client"))
-                throw new ArgumentException("Клиент с таким ID не найден.");
+            if (!db.User.Any(user => user.Id == clientId && !user.IsDeleted && user.Role == UserRoles.Client))
+                throw new ArgumentException("Активный клиент с таким ID не найден.");
 
             db.Requests.Add(new Request
             {
-                Title = title.Trim(),
-                description = description.Trim(),
-                StatusId = 1,
-                ClientId = clientId,
-                CraatedAt = DateTime.UtcNow
+                Title = title.Trim(), description = description.Trim(),
+                StatusId = 1, ClientId = clientId, CraatedAt = DateTime.UtcNow
             });
-
             db.SaveChanges();
         }
 
         public bool UpdateRequest(int requestId, string title, string description)
         {
             ValidateRequestFields(title, description);
-
             using var db = new AppDbContext();
             var request = db.Requests.Find(requestId);
-            if (request is null)
-                return false;
-
+            if (request is null) return false;
             request.Title = title.Trim();
             request.description = description.Trim();
             db.SaveChanges();
@@ -116,14 +96,10 @@ namespace Ticket_manadger
         public bool UpdateStatus(int requestId, int statusId)
         {
             using var db = new AppDbContext();
-
             var request = db.Requests.Find(requestId);
-            if (request is null)
-                return false;
-
+            if (request is null) return false;
             if (!db.RequestStatus.Any(status => status.Id == statusId))
                 throw new ArgumentException("Статус с таким ID не найден.");
-
             request.StatusId = statusId;
             db.SaveChanges();
             return true;
@@ -133,22 +109,16 @@ namespace Ticket_manadger
         {
             using var db = new AppDbContext();
             var request = db.Requests.Find(requestId);
-            if (request is null)
-                return false;
-
+            if (request is null) return false;
             db.Requests.Remove(request);
             db.SaveChanges();
             return true;
         }
 
-        // Оставлено для совместимости с прежним именем метода.
-        public bool DelRequest(int requestId) => DeleteRequest(requestId);
-
         public Dictionary<string, int> GetLog()
         {
             using var db = new AppDbContext();
-            return db.Requests
-                .AsNoTracking()
+            return db.Requests.AsNoTracking()
                 .GroupBy(request => request.Status.Name)
                 .Select(group => new { Status = group.Key, Count = group.Count() })
                 .ToDictionary(item => item.Status, item => item.Count);
@@ -157,24 +127,19 @@ namespace Ticket_manadger
         public List<KeyValuePair<string, int>> GetClientRequestCounts()
         {
             using var db = new AppDbContext();
-            return db.Requests
-                .AsNoTracking()
+            return db.Requests.AsNoTracking()
                 .GroupBy(request => request.Client.FullName)
                 .Select(group => new { Client = group.Key, Count = group.Count() })
-                .OrderByDescending(item => item.Count)
-                .ThenBy(item => item.Client)
-                .Select(item => new KeyValuePair<string, int>(item.Client, item.Count))
-                .ToList();
+                .OrderByDescending(item => item.Count).ThenBy(item => item.Client)
+                .Select(item => new KeyValuePair<string, int>(item.Client, item.Count)).ToList();
         }
 
         private static void ValidateRequestFields(string title, string description)
         {
             if (string.IsNullOrWhiteSpace(title))
                 throw new ArgumentException("Название заявки не может быть пустым.");
-
             if (title.Trim().Length > 100)
                 throw new ArgumentException("Название заявки должно содержать не более 100 символов.");
-
             if (string.IsNullOrWhiteSpace(description))
                 throw new ArgumentException("Описание заявки не может быть пустым.");
         }
