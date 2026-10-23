@@ -98,7 +98,7 @@ internal sealed class TicketApiClient : IDisposable
         PatchAsync<ConsoleRequest>($"api/requests/{id}/status", new ChangeStatusBody(statusId));
 
     public Task<ConsoleRequest> ClaimAsync(int id) =>
-        PostAsync<ConsoleRequest>($"api/requests/{id}/claim", new { });
+        PostAsync<ConsoleRequest>($"api/requests/{id}/claim", new { claim = true });
 
     public Task<ConsoleRequest> AssignExecutorAsync(int id, int? executorId) =>
         PatchAsync<ConsoleRequest>($"api/requests/{id}/executor", new SetExecutorBody(executorId));
@@ -185,6 +185,8 @@ internal sealed class TicketApiClient : IDisposable
             using var json = JsonDocument.Parse(body);
             if (json.RootElement.TryGetProperty("error", out var error))
                 message = error.GetString() ?? message;
+            else if (json.RootElement.TryGetProperty("detail", out var detail))
+                message = detail.GetString() ?? message;
             else if (json.RootElement.TryGetProperty("title", out var title))
                 message = title.GetString() ?? message;
         }
