@@ -31,7 +31,7 @@ namespace Ticket_manadger.Api.Controllers
             if (Role == UserRoles.Client)
                 query = query.Where(request => request.ClientId == UserId);
             else if (Role == UserRoles.Operator)
-                query = query.Where(request => request.ExecutorId == UserId || request.ExecutorId == null);
+                query = query.Where(request => request.ExecutorId == UserId || (request.ExecutorId == null && request.StatusId != 3));
 
             if (statusId.HasValue) query = query.Where(request => request.StatusId == statusId.Value);
             if (priority.HasValue)

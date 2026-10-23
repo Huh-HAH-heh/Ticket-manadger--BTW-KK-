@@ -11,7 +11,7 @@ namespace Ticket_manadger
         public User? Authenticate(string login, string password)
         {
             var normalized = (login ?? string.Empty).Trim().ToLowerInvariant();
-            if (normalized.Length == 0 || password.Length == 0) return null;
+            if (normalized.Length == 0 || string.IsNullOrEmpty(password)) return null;
             var user = _users.FindActiveByLogin(normalized);
             return user is not null && PasswordHasher.Verify(password, user.PasswordHash) ? user : null;
         }
@@ -40,6 +40,7 @@ namespace Ticket_manadger
             login = (login ?? string.Empty).Trim().ToLowerInvariant();
             fullName = (fullName ?? string.Empty).Trim();
             email = (email ?? string.Empty).Trim().ToLowerInvariant();
+            password ??= string.Empty;
 
             if (!Regex.IsMatch(login, @"^[a-z0-9_.-]{3,50}$"))
                 throw new ArgumentException("Логин должен содержать 3–50 латинских букв, цифр, точек, дефисов или подчёркиваний.");
