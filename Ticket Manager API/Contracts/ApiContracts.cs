@@ -7,6 +7,7 @@
     public sealed record AuthUserDto(int Id, string? Login, string FullName, string? Email, string Role, bool IsDeleted);
     public sealed record AuthResponse(AuthUserDto User, string Token);
     public sealed record ChangeRoleDto(string Role);
+    public sealed record SetExecutorDto(int? ExecutorId);
     public sealed record CreateRequestDto(string Title, string Description, int Priority = 2, int? ClientId = null);
     public sealed record UpdateRequestDto(string Title, string Description, int Priority = 2);
     public sealed record ChangeStatusDto(int StatusId);

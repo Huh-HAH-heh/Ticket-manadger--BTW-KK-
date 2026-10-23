@@ -23,6 +23,7 @@ internal sealed record RegisterBody(string Login, string FullName, string Email,
 internal sealed record BootstrapBody(string BootstrapKey, string Login, string FullName, string Email, string Password);
 internal sealed record CreateUserBody(string Login, string FullName, string Email, string Password, string Role);
 internal sealed record ChangeRoleBody(string Role);
+internal sealed record SetExecutorBody(int? ExecutorId);
 internal sealed record CommentBody(string Text);
 
 internal static class RoleNames
@@ -97,6 +98,9 @@ internal sealed class TicketApiClient : IDisposable
 
     public Task<ConsoleRequest> ClaimAsync(int id) =>
         PostAsync<ConsoleRequest>($"api/requests/{id}/claim", new { });
+
+    public Task<ConsoleRequest> AssignExecutorAsync(int id, int? executorId) =>
+        PatchAsync<ConsoleRequest>($"api/requests/{id}/executor", new SetExecutorBody(executorId));
 
     public Task DeleteRequestAsync(int id) => DeleteAsync($"api/requests/{id}");
 

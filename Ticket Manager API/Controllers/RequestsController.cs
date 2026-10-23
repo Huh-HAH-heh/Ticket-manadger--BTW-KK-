@@ -151,6 +151,32 @@ namespace Ticket_manadger.Api.Controllers
             return Ok(ToDto(id));
         }
 
+        [HttpPatch("{id:int}/executor")]
+        public IActionResult AssignExecutor(int id, SetExecutorDto dto)
+        {
+            var denied = RequireRole(UserRoles.Admin);
+            if (denied is not null) return denied;
+
+            var request = _db.Requests.FirstOrDefault(item => item.Id == id);
+            if (request is null) return NotFound();
+
+            User? executor = null;
+            if (dto.ExecutorId.HasValue)
+            {
+                executor = _db.User.FirstOrDefault(user =>
+                    user.Id == dto.ExecutorId.Value && !user.IsDeleted && user.Role == UserRoles.Operator);
+                if (executor is null)
+                    return BadRequest(new { error = "Исполнитель должен быть активным пользователем с ролью Operator." });
+            }
+
+            var previous = request.ExecutorId;
+            request.ExecutorId = executor?.Id;
+            _db.SaveChanges();
+            AddHistory(id, "ExecutorAssigned",
+                $"Назначение исполнителя: {previous?.ToString() ?? "не назначен"} -> {executor?.Id.ToString() ?? "не назначен"}.");
+            return Ok(ToDto(id));
+        }
+
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
