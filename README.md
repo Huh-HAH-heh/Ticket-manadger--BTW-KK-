@@ -12,22 +12,24 @@ Ticket-manadger--BTW-KK-/
 │   ├── ConsoleMenu.cs
 │   ├── TicketApiClient.cs
 │   └── Ticket manadger.csproj
-└── Ticket Manager API/
-    ├── Program.cs
-    ├── AppDbContext.cs
-    ├── AppDbContextFactory.cs
-    ├── Models.cs
-    ├── UserRoles.cs
-    ├── ApiTokenService.cs
-    ├── AuthService.cs
-    ├── UserRepository.cs
-    ├── PasswordHasher.cs
-    ├── Controllers/
-    │   ├── AuthController.cs
-    │   ├── RequestsController.cs
-    │   ├── UsersController.cs
-    │   └── ReportsController.cs
-    └── Migrations/
+├── Ticket Manager API/
+│   ├── Program.cs
+│   ├── AppDbContext.cs
+│   ├── AppDbContextFactory.cs
+│   ├── Models.cs
+│   ├── UserRoles.cs
+│   ├── ApiTokenService.cs
+│   ├── AuthService.cs
+│   ├── UserRepository.cs
+│   ├── PasswordHasher.cs
+│   ├── Controllers/
+│   │   ├── AuthController.cs
+│   │   ├── RequestsController.cs
+│   │   ├── UsersController.cs
+│   │   └── ReportsController.cs
+│   └── Migrations/
+└── scripts/
+    └── Initialize-TicketManagerEnvironment.ps1
 ```
 
 ### Консоль — `Ticket manadger/`
@@ -101,44 +103,77 @@ API → консоль → таблица или сообщение
 
 ## Настройка и запуск
 
-Строка подключения и секреты остаются в переменных окружения, а не в исходном коде.
+Для локального запуска на Windows в репозитории есть скрипт `scripts/Initialize-TicketManagerEnvironment.ps1`. Он задаёт параметры только для текущего окна PowerShell, скрыто запрашивает пароль PostgreSQL и проверяет, что база `ticket_db` доступна на `localhost:5432`.
 
-1. **В терминале API** задайте строку подключения и два секрета:
+### 1. Переключитесь на ветку настройки БД и откройте корень репозитория
 
 ```powershell
-$env:TICKET_DB_CONNECTION = "Host=localhost;Port=5433;Database=ticket_db;Username=postgres;Password=ВАШ_ПАРОЛЬ"
-$env:TICKET_API_TOKEN_SECRET = "СЮДА_ДЛИННЫЙ_СЛУЧАЙНЫЙ_СЕКРЕТ_НЕ_МЕНЕЕ_32_БАЙТ"
-$env:TICKET_BOOTSTRAP_KEY = "ОТДЕЛЬНЫЙ_КЛЮЧ_ПЕРВОЙ_НАСТРОЙКИ"
+git fetch origin
+git switch feature/stage-5-db-setup
 ```
 
-2. Примените миграции (если `dotnet-ef` уже установлен, первую команду пропустите):
+Если PowerShell блокирует локальные сценарии, разрешите запуск только в текущем окне, затем подключите скрипт через dot-sourcing (первая точка сохраняет переменные в текущем терминале):
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+. .\scripts\Initialize-TicketManagerEnvironment.ps1
+```
+
+Скрипт предполагает стандартную установку PostgreSQL 18, пользователя `postgres`, порт `5432` и уже созданную базу `ticket_db`. Если базы ещё нет, создайте её командой:
+
+```powershell
+& "$env:ProgramFiles\PostgreSQL\18\bin\psql.exe" -h localhost -p 5432 -U postgres -d postgres -W -c "CREATE DATABASE ticket_db;"
+```
+
+Скрипт проверяет соединение, затем устанавливает `TICKET_DB_CONNECTION`, `TICKET_API_TOKEN_SECRET`, `TICKET_BOOTSTRAP_KEY` и `TICKET_API_URL`. Он выводит ключ первичной настройки администратора — сохраните его, чтобы использовать во втором терминале. Пароль БД не записывается в исходники.
+
+### 2. Примените миграции
+
+Убедитесь, что установлен .NET 10 SDK. Проверьте инструмент миграций:
+
+```powershell
+dotnet ef --version
+```
+
+Если команда `dotnet ef` не найдена, установите инструмент:
 
 ```powershell
 dotnet tool install --global dotnet-ef --version 10.0.13
+```
+
+В том же терминале, где запускали скрипт настройки:
+
+```powershell
 dotnet ef database update --project "Ticket Manager API/Ticket Manager API.csproj"
 ```
 
-3. В первом терминале запустите сервер:
+### 3. Запустите сервер API
+
+В этом же окне PowerShell:
 
 ```powershell
 dotnet run --project "Ticket Manager API/Ticket Manager API.csproj"
 ```
 
-4. **В отдельном терминале** укажите URL API и тот же ключ первичной настройки:
+Оставьте окно открытым. В браузере проверьте [http://localhost:5080/health](http://localhost:5080/health). Успешный ответ содержит `status: ok` и `database: connected`.
+
+### 4. Создайте первого администратора и запустите консоль
+
+Откройте второе окно PowerShell в корне репозитория. Переменные окружения между разными терминалами не переносятся, поэтому вставьте туда сохранённый ключ из первого терминала:
 
 ```powershell
 $env:TICKET_API_URL = "http://localhost:5080"
-$env:TICKET_BOOTSTRAP_KEY = "ТОТ_ЖЕ_КЛЮЧ_ПЕРВОЙ_НАСТРОЙКИ"
+$env:TICKET_BOOTSTRAP_KEY = "ВСТАВЬТЕ_КЛЮЧ_ИЗ_ПЕРВОГО_ТЕРМИНАЛА"
 dotnet run --project "Ticket manadger/Ticket manadger.csproj" -- --bootstrap-admin
 ```
 
-После создания администратора запустите консоль без параметров:
+Введите имя, логин, email и пароль администратора. После его создания запускайте обычное меню:
 
 ```powershell
 dotnet run --project "Ticket manadger/Ticket manadger.csproj"
 ```
 
-Для обычной работы нужен запущенный API. Секрет подписи хранится только в окружении сервера. Пароль БД и секреты нельзя отправлять в Git.
+Для работы приложения должны быть запущены PostgreSQL и API. Если PowerShell закроется, переменные окружения будут потеряны: повторно выполните скрипт настройки перед миграциями или запуском API. Не отправляйте пароль БД и секреты в Git.
 
 ## Что входит в текущий этап 5
 
