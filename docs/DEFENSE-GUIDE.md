@@ -60,6 +60,7 @@ https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/archive/refs/heads/featu
 ## Резервные копии кода и базы
 
 - Код до локальных установочных изменений: [backup/defense-2026-10-24-stage5](https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/tree/backup/defense-2026-10-24-stage5).
+- Снимок кода вместе с двумя гайдами и установочными сценариями: [backup/defense-2026-10-24-guides-final](https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/tree/backup/defense-2026-10-24-guides-final).
 - Ветка текущих сценариев: [feature/local-postgres-defense](https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/tree/feature/local-postgres-defense).
 - Backup Docker-базы: Backup-TicketManager-Docker.ps1.
 - Backup нативной Windows-базы: Backup-TicketManager-Native.ps1.
