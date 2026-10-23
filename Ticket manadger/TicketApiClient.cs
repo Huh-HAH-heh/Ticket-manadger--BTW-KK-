@@ -73,7 +73,7 @@ internal sealed class TicketApiClient : IDisposable
         PostAsync<AuthReply>("api/auth/bootstrap-admin", new BootstrapBody(key, login, fullName, email, password));
 
     public Task<List<ConsoleRequest>> GetRequestsAsync(string? search = null, int? statusId = null,
-        int? executorId = null, DateTime? from = null, DateTime? to = null, bool overdue = false, int? priority = null)
+        int? executorId = null, DateTime? from = null, DateTime? to = null, bool overdue = false, int? priority = null, string? sort = null)
     {
         var query = new List<string>();
         if (!string.IsNullOrWhiteSpace(search)) query.Add("search=" + Uri.EscapeDataString(search));
@@ -83,6 +83,7 @@ internal sealed class TicketApiClient : IDisposable
         if (to.HasValue) query.Add("to=" + Uri.EscapeDataString(to.Value.ToUniversalTime().ToString("O")));
         if (overdue) query.Add("overdue=true");
         if (priority.HasValue) query.Add("priority=" + priority.Value);
+        if (!string.IsNullOrWhiteSpace(sort)) query.Add("sort=" + Uri.EscapeDataString(sort));
         return GetAsync<List<ConsoleRequest>>("api/requests" + (query.Count == 0 ? "" : "?" + string.Join("&", query)));
     }
 

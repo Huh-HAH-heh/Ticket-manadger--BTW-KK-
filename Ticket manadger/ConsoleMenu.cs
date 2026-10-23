@@ -289,6 +289,17 @@ internal sealed class ConsoleMenu
         if (priorityChoice > 4) throw new ArgumentException("Приоритет должен быть от 0 до 4.");
         int? priorityFilter = priorityChoice == 0 ? null : priorityChoice;
 
+        Console.WriteLine("Сортировка: 1 — новые, 2 — старые, 3 — название А—Я, 4 — название Я—А, 5 — приоритет, 6 — статус.");
+        var sort = ReadChoice("Сортировка: ", "1", "2", "3", "4", "5", "6") switch
+        {
+            "2" => "oldest",
+            "3" => "title",
+            "4" => "title-desc",
+            "5" => "priority",
+            "6" => "status",
+            _ => "newest"
+        };
+
         Console.Write("Минимальная дата создания, YYYY-MM-DD (Enter — без ограничения): ");
         var fromInput = Console.ReadLine();
         DateTime? from = ParseDate(fromInput, endOfDay: false);
@@ -311,7 +322,7 @@ internal sealed class ConsoleMenu
         }
 
         var results = await _api.GetRequestsAsync(
-            search, statusId, executorFilter, from, to, priority: priorityFilter);
+            search, statusId, executorFilter, from, to, priority: priorityFilter, sort: sort);
         await ShowRequestsAsync(results);
     }
 

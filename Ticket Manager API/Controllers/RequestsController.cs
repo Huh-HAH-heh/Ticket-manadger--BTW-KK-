@@ -19,6 +19,7 @@ namespace Ticket_manadger.Api.Controllers
             [FromQuery] int? statusId,
             [FromQuery] int? executorId,
             [FromQuery] int? priority,
+            [FromQuery] string? sort,
             [FromQuery] DateTime? from,
             [FromQuery] DateTime? to,
             [FromQuery] bool overdue = false)
@@ -58,7 +59,17 @@ namespace Ticket_manadger.Api.Controllers
                     EF.Functions.ILike(request.Client.FullName, pattern));
             }
 
-            return Ok(query.OrderByDescending(request => request.CraatedAt).Take(500).ToList().Select(ToDto));
+            query = (sort ?? "newest").Trim().ToLowerInvariant() switch
+            {
+                "oldest" => query.OrderBy(request => request.CraatedAt),
+                "title" => query.OrderBy(request => request.Title),
+                "title-desc" => query.OrderByDescending(request => request.Title),
+                "priority" => query.OrderByDescending(request => request.Priority).ThenByDescending(request => request.CraatedAt),
+                "status" => query.OrderBy(request => request.Status.Name).ThenByDescending(request => request.CraatedAt),
+                _ => query.OrderByDescending(request => request.CraatedAt)
+            };
+
+            return Ok(query.Take(500).ToList().Select(ToDto));
         }
 
         [HttpGet("{id:int}")]
