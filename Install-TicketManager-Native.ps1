@@ -352,4 +352,6 @@ Write-Host "API: $ApiUrl/health"
 Write-Host "Настройки (DPAPI): $StatePath"
 Write-Host 'Для повторного запуска используй Start-TicketManager-Native.cmd в корне репозитория.'
 Write-Host 'API останется в отдельном окне после выхода из клиента.' -ForegroundColor Yellow
+$ReadyPath = Join-Path $StateDirectory 'ready.flag'
+Set-Content -LiteralPath $ReadyPath -Value (Get-Date).ToString('o') -Encoding ASCII
 & $dotnet $consoleDll
