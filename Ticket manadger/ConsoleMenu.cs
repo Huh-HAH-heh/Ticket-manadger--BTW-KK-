@@ -424,7 +424,7 @@ internal sealed class ConsoleMenu
         foreach (var item in clients) Console.WriteLine($"  {item.Client}: {item.Count}");
 
         Console.WriteLine();
-        Console.WriteLine($"Всего заявок: {(await _api.GetRequestsAsync()).Count}");
+        Console.WriteLine($"Всего заявок: {statuses.Sum(item => item.Count)}");
     }
 
     private async Task ManageUsersAsync(ConsoleUser admin)
