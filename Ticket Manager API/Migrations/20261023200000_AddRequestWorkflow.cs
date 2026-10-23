@@ -102,8 +102,8 @@ namespace Ticket_manadger.Migrations
             migrationBuilder.DropTable(name: "comments");
             migrationBuilder.DropTable(name: "requestHistory");
             migrationBuilder.DropForeignKey(name: "FK_requests_users_executorId", table: "requests");
-            migrationBuilder.DropIndex(name: "IX_requests_ExecutorId_StatusId", table: "requests");
-            migrationBuilder.DropIndex(name: "IX_requests_StatusId_CraatedAt", table: "requests");
+            migrationBuilder.DropIndex(name: "IX_requests_executorId_statusId", table: "requests");
+            migrationBuilder.DropIndex(name: "IX_requests_statusId_CraatedAt", table: "requests");
             migrationBuilder.DropColumn(name: "executorId", table: "requests");
             migrationBuilder.DropColumn(name: "priority", table: "requests");
 

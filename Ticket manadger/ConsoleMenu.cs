@@ -151,7 +151,7 @@ internal sealed class ConsoleMenu
                 switch (choice)
                 {
                     case "1": await RunSafelyAsync(() => ShowRequestsAsync()); break;
-                    case "2": await RunSafelyAsync(() => SearchRequestsAsync()); break;
+                    case "2": await RunSafelyAsync(() => SearchRequestsAsync(user.Role)); break;
                     case "3": await RunSafelyAsync(() => ClaimRequestAsync()); break;
                     case "4": await RunSafelyAsync(() => ChangeStatusAsync()); break;
                     case "5": await RunSafelyAsync(() => EditRequestAsync()); break;
@@ -166,7 +166,7 @@ internal sealed class ConsoleMenu
                 switch (choice)
                 {
                     case "1": await RunSafelyAsync(() => ShowRequestsAsync()); break;
-                    case "2": await RunSafelyAsync(() => SearchRequestsAsync()); break;
+                    case "2": await RunSafelyAsync(() => SearchRequestsAsync(user.Role)); break;
                     case "3": await RunSafelyAsync(() => CreateRequestForClientAsync()); break;
                     case "4": await RunSafelyAsync(() => EditRequestAsync()); break;
                     case "5": await RunSafelyAsync(() => ChangeStatusAsync()); break;
