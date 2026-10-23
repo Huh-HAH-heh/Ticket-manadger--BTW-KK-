@@ -93,6 +93,9 @@ cd "D:\focx\Новая папка\Ticket-manadger--BTW-KK-"
 $env:TICKET_DB_CONNECTION = "Host=127.0.0.1;Port=5433;Database=ticket_db;Username=postgres;Password=$dbPassword"
 $env:TICKET_API_TOKEN_SECRET = [guid]::NewGuid().ToString("N") + [guid]::NewGuid().ToString("N")
 $env:ASPNETCORE_URLS = "http://127.0.0.1:5080"
+# Только если в этой базе ещё нет администратора:
+$env:TICKET_BOOTSTRAP_KEY = [guid]::NewGuid().ToString("N") + [guid]::NewGuid().ToString("N")
+Set-Clipboard $env:TICKET_BOOTSTRAP_KEY
 dotnet tool update --global dotnet-ef --version 10.0.13
 dotnet ef database update --project "Ticket Manager API/Ticket Manager API.csproj"
 \`\`\`
@@ -133,17 +136,13 @@ Invoke-RestMethod "https://ТВОЙ-АДРЕС.trycloudflare.com/health"
 
 ### 5. Создать администратора, только если его ещё нет
 
-До запуска API задай секрет первичной настройки в том же окне, откуда стартует сервер:
+Ключ уже был создан и скопирован в буфер обмена на этапе 2. Не генерируй новый ключ, пока API работает: ключ в API и клиенте должен совпадать. Если администратор уже существует, этот шаг пропусти.
 
-\`\`\`powershell
-$env:TICKET_BOOTSTRAP_KEY = [guid]::NewGuid().ToString("N") + [guid]::NewGuid().ToString("N")
-\`\`\`
-
-Сохрани его приватно и передай тому же процессу клиентского запуска. В отдельном PowerShell задай адрес и такой же ключ:
+В отдельном PowerShell задай публичный адрес и возьми тот же ключ из буфера:
 
 \`\`\`powershell
 $env:TICKET_API_URL = "https://ТВОЙ-АДРЕС.trycloudflare.com"
-$env:TICKET_BOOTSTRAP_KEY = "ТОТ_ЖЕ_КЛЮЧ"
+$env:TICKET_BOOTSTRAP_KEY = (Get-Clipboard -Raw).Trim()
 dotnet run --project "Ticket manadger/Ticket manadger.csproj" -- --bootstrap-admin
 \`\`\`
 
