@@ -19,7 +19,7 @@ if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TICKET_API_TOK
 
 app.Use(async (context, next) =>
 {
-    var header = context.Request.Headers.Authorization.ToString();
+    var header = context.Request.Headers["Authorization"].ToString();
     if (header.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
     {
         var tokens = context.RequestServices.GetRequiredService<ApiTokenService>();

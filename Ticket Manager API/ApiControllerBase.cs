@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Ticket_manadger;
 
 namespace Ticket_manadger.Api
 {
@@ -14,6 +15,6 @@ namespace Ticket_manadger.Api
         protected IActionResult? RequireRole(params string[] roles) =>
             !IsSignedIn ? Unauthorized(new { error = "Войдите в систему." }) :
             roles.Contains(Role, StringComparer.Ordinal) ? null :
-            Forbid();
+            StatusCode(StatusCodes.Status403Forbidden, new { error = "Недостаточно прав для этой операции." });
     }
 }
