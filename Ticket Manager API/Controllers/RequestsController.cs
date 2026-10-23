@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Ticket_manadger;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ticket_manadger.Api;
 using Ticket_manadger.Api.Contracts;
@@ -17,6 +18,7 @@ namespace Ticket_manadger.Api.Controllers
             [FromQuery] string? search,
             [FromQuery] int? statusId,
             [FromQuery] int? executorId,
+            [FromQuery] int? priority,
             [FromQuery] DateTime? from,
             [FromQuery] DateTime? to,
             [FromQuery] bool overdue = false)
@@ -31,6 +33,11 @@ namespace Ticket_manadger.Api.Controllers
                 query = query.Where(request => request.ExecutorId == UserId || request.ExecutorId == null);
 
             if (statusId.HasValue) query = query.Where(request => request.StatusId == statusId.Value);
+            if (priority.HasValue)
+            {
+                if (priority.Value is < 1 or > 4) return BadRequest(new { error = "Приоритет должен быть от 1 до 4." });
+                query = query.Where(request => request.Priority == priority.Value);
+            }
             if (executorId.HasValue && Role == UserRoles.Admin)
                 query = executorId.Value == 0
                     ? query.Where(request => request.ExecutorId == null)
