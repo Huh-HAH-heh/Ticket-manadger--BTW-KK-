@@ -1,5 +1,13 @@
 # Ticket Manager System
 
+## Гайды для защиты
+
+Полная инструкция для выбора варианта: **[docs/DEFENSE-GUIDE.md](docs/DEFENSE-GUIDE.md)**.
+
+- **Вариант A — [Docker дома + Cloudflare + клиент в колледже](docs/DEFENSE-SCENARIO-A-DOCKER-CLOUDFLARE.md).** Для компьютера колледжа нужен клиентский TicketManager-College.zip; домашний ПК должен оставаться включённым.
+- **Вариант B — [всё на одном Windows-ПК, без Docker](docs/DEFENSE-SCENARIO-B-LOCAL-WINDOWS.md).** Скачивается полный исходный проект; запускается Start-TicketManager-OneClick.cmd. Первая установка требует администратора Windows и интернета.
+- Резервные копии: [docs/GITHUB-BACKUPS.md](docs/GITHUB-BACKUPS.md).
+
 ## Локальная защита без Docker
 
 Для демонстрации на одном компьютере подготовлен отдельный сценарий установки PostgreSQL как службы Windows. Он запускает API и консоль на одном ПК, поэтому для этого режима не нужны Docker, VPS, Cloudflare Tunnel или доступ к интернету после первоначальной установки.
