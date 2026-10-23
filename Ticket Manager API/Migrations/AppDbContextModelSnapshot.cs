@@ -105,6 +105,8 @@ namespace Ticket_manadger.Migrations
 
                     b.HasIndex("TicketId", "CreatedAt");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("comments");
                 });
 
@@ -143,6 +145,8 @@ namespace Ticket_manadger.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("TicketId", "CreatedAt");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("requestHistory");
                 });
@@ -255,7 +259,7 @@ namespace Ticket_manadger.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Ticket_manadger.RequestStatus", "Status")
-                        .WithMany()
+                        .WithMany("Request")
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

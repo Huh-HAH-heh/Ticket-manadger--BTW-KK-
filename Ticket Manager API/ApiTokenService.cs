@@ -66,7 +66,10 @@ namespace Ticket_manadger
         private static byte[] Base64UrlDecode(string value)
         {
             value = value.Replace('-', '+').Replace('_', '/');
-            value += value.Length % 4 switch { 0 => "", 2 => "==", 3 => "=", _ => throw new FormatException() };
+            var remainder = value.Length % 4;
+            if (remainder == 1) throw new FormatException();
+            if (remainder == 2) value += "==";
+            else if (remainder == 3) value += "=";
             return Convert.FromBase64String(value);
         }
     }

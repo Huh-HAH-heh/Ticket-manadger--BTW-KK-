@@ -8,6 +8,18 @@ namespace Ticket_manadger.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_requests_users_clientId",
+                table: "requests");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_requests_users_clientId",
+                table: "requests",
+                column: "clientId",
+                principalTable: "users",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Restrict);
+
             migrationBuilder.AddColumn<int>(
                 name: "priority", table: "requests", type: "integer",
                 nullable: false, defaultValue: 2);
@@ -16,12 +28,12 @@ namespace Ticket_manadger.Migrations
                 name: "executorId", table: "requests", type: "integer", nullable: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_requests_ExecutorId_StatusId",
+                name: "IX_requests_executorId_statusId",
                 table: "requests",
                 columns: new[] { "executorId", "statusId" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_requests_StatusId_CraatedAt",
+                name: "IX_requests_statusId_CraatedAt",
                 table: "requests",
                 columns: new[] { "statusId", "CraatedAt" });
 
@@ -94,6 +106,18 @@ namespace Ticket_manadger.Migrations
             migrationBuilder.DropIndex(name: "IX_requests_StatusId_CraatedAt", table: "requests");
             migrationBuilder.DropColumn(name: "executorId", table: "requests");
             migrationBuilder.DropColumn(name: "priority", table: "requests");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_requests_users_clientId",
+                table: "requests");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_requests_users_clientId",
+                table: "requests",
+                column: "clientId",
+                principalTable: "users",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade);
         }
     }
 }

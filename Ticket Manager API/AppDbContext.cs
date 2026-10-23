@@ -33,6 +33,12 @@ namespace Ticket_manadger
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Request>()
+                .HasOne(request => request.Status)
+                .WithMany(status => status.Request)
+                .HasForeignKey(request => request.StatusId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Request>()
                 .HasOne(request => request.Executor)
                 .WithMany()
                 .HasForeignKey(request => request.ExecutorId)

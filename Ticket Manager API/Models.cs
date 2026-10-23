@@ -73,6 +73,8 @@ namespace Ticket_manadger
 
         [Required, MaxLength(100), Column("Name")]
         public string Name { get; set; } = string.Empty;
+
+        public List<Request> Request { get; set; } = new();
     }
 
     [Table("comments")]
