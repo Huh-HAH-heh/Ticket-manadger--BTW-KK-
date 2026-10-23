@@ -284,6 +284,10 @@ internal sealed class ConsoleMenu
             Console.WriteLine($"{status.Id}. {status.Name}");
         var statusChoice = ReadNonNegativeInt("ID статуса: ");
         int? statusId = statusChoice == 0 ? null : statusChoice;
+        Console.WriteLine("Приоритет: 0 — любой; 1 — низкий; 2 — обычный; 3 — высокий; 4 — критический.");
+        var priorityChoice = ReadNonNegativeInt("Приоритет: ");
+        if (priorityChoice > 4) throw new ArgumentException("Приоритет должен быть от 0 до 4.");
+        int? priorityFilter = priorityChoice == 0 ? null : priorityChoice;
 
         Console.Write("Минимальная дата создания, YYYY-MM-DD (Enter — без ограничения): ");
         var fromInput = Console.ReadLine();
@@ -307,7 +311,7 @@ internal sealed class ConsoleMenu
         }
 
         var results = await _api.GetRequestsAsync(
-            search, statusId, executorFilter, from, to);
+            search, statusId, executorFilter, from, to, priority: priorityFilter);
         await ShowRequestsAsync(results);
     }
 
