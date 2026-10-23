@@ -116,6 +116,9 @@ function Invoke-Psql([string]$PsqlPath, [int]$Port, [string]$Database, [string]$
 }
 
 Write-Step 'ЭТАП 1/7 — Проверка среды'
+$dotnetCommand = Get-Command 'dotnet.exe' -ErrorAction SilentlyContinue
+if (-not $dotnetCommand) { $dotnetCommand = Get-Command 'dotnet' -ErrorAction SilentlyContinue }
+if (-not $dotnetCommand) { Install-DotNet10Sdk }
 $dotnet = Get-DotNetCommand
 if (-not (Test-DotNet10Sdk)) { Install-DotNet10Sdk; $dotnet = Get-DotNetCommand }
 Write-Host "Найден .NET SDK 10; проект: $RepoRoot" -ForegroundColor Green
@@ -139,7 +142,7 @@ if ($null -eq $state) {
     if ($null -eq $availablePort) { throw 'Не найден свободный порт PostgreSQL среди 5432, 5434, 5435, 5436.' }
     $pgPort = [int]$availablePort
     $pgSuperPassword = New-RandomHex 2
-    $pgServicePassword = New-RandomHex 2
+    $pgServicePassword = 'Aa9!' + (New-RandomHex 2) + 'zZ'
     $appPassword = New-RandomHex 3
     $apiTokenSecret = New-RandomHex 3
     $bootstrapKey = New-RandomHex 3
