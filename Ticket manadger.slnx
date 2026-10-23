@@ -1,6 +1,4 @@
 <Solution>
-  <Folder Name="/Элементы решения/">
-    <File Path=".gitignore" />
-  </Folder>
   <Project Path="Ticket manadger/Ticket manadger.csproj" />
+  <Project Path="Ticket Manager API/Ticket Manager API.csproj" />
 </Solution>
