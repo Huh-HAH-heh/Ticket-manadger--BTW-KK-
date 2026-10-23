@@ -5,7 +5,8 @@
 Для демонстрации на одном компьютере подготовлен отдельный сценарий установки PostgreSQL как службы Windows. Он запускает API и консоль на одном ПК, поэтому для этого режима не нужны Docker, VPS, Cloudflare Tunnel или доступ к интернету после первоначальной установки.
 
 - **Install-TicketManager-Native.ps1** — первая установка PostgreSQL 16, создание базы и пользователя приложения, EF Core migrations, сборка API и клиента.
-- **Start-TicketManager-Native.cmd** — повторный запуск локального API и клиента.
+- **Start-TicketManager-OneClick.cmd** — единая точка запуска: при первом запуске устанавливает PostgreSQL, применяет миграции и предлагает создать администратора; при следующих запусках сразу открывает приложение.
+- **Start-TicketManager-Native.cmd** — прямой повторный запуск после установки.
 - **Backup-TicketManager-Docker.ps1** — резервный дамп текущего Docker PostgreSQL в отдельную папку.
 - **Backup-TicketManager-Native.ps1** — резервный дамп нативного PostgreSQL.
 - **docs/NATIVE-WINDOWS-SETUP.md** — инструкция установки без Docker.
