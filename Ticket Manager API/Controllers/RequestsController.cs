@@ -32,7 +32,9 @@ namespace Ticket_manadger.Api.Controllers
 
             if (statusId.HasValue) query = query.Where(request => request.StatusId == statusId.Value);
             if (executorId.HasValue && Role == UserRoles.Admin)
-                query = query.Where(request => request.ExecutorId == executorId.Value);
+                query = executorId.Value == 0
+                    ? query.Where(request => request.ExecutorId == null)
+                    : query.Where(request => request.ExecutorId == executorId.Value);
             if (from.HasValue) query = query.Where(request => request.CraatedAt >= from.Value);
             if (to.HasValue) query = query.Where(request => request.CraatedAt <= to.Value);
             if (overdue)
@@ -107,6 +109,8 @@ namespace Ticket_manadger.Api.Controllers
             if (request is null || !CanAccess(request)) return NotFound();
             if (Role == UserRoles.Client && request.StatusId != 1)
                 return Conflict(new { error = "Клиент может редактировать только новые заявки." });
+            if (Role == UserRoles.Operator && request.ExecutorId != UserId)
+                return Conflict(new { error = "Сначала возьмите заявку в работу." });
 
             var before = $"Название: {request.Title}; приоритет: {request.Priority}";
             request.Title = dto.Title.Trim();
@@ -127,6 +131,8 @@ namespace Ticket_manadger.Api.Controllers
 
             var request = _db.Requests.FirstOrDefault(item => item.Id == id);
             if (request is null || !CanAccess(request)) return NotFound();
+            if (Role == UserRoles.Operator && request.ExecutorId != UserId)
+                return Conflict(new { error = "Сначала возьмите заявку в работу." });
             var oldStatus = request.StatusId;
             request.StatusId = dto.StatusId;
             _db.SaveChanges();
@@ -216,6 +222,8 @@ namespace Ticket_manadger.Api.Controllers
 
             var request = _db.Requests.FirstOrDefault(item => item.Id == id);
             if (request is null || !CanAccess(request)) return NotFound();
+            if (Role == UserRoles.Operator && request.ExecutorId != UserId)
+                return Conflict(new { error = "Перед комментированием возьмите заявку в работу." });
             var comment = new RequestComment
             {
                 TicketId = id, UserId = UserId, Text = dto.Text.Trim(), CreatedAt = DateTime.UtcNow
@@ -233,6 +241,8 @@ namespace Ticket_manadger.Api.Controllers
             if (denied is not null) return denied;
             var request = _db.Requests.FirstOrDefault(item => item.Id == id);
             if (request is null || !CanAccess(request)) return NotFound();
+            if (Role == UserRoles.Operator && request.ExecutorId != UserId)
+                return Conflict(new { error = "История доступна исполнителю после назначения заявки." });
 
             return Ok(_db.RequestHistory.AsNoTracking()
                 .Where(item => item.TicketId == id)

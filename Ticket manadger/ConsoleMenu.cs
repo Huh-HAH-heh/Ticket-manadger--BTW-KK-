@@ -141,7 +141,7 @@ internal sealed class ConsoleMenu
                 {
                     case "1": await RunSafelyAsync(() => ShowRequestsAsync()); break;
                     case "2": await RunSafelyAsync(() => CreateOwnRequestAsync()); break;
-                    case "3": await RunSafelyAsync(() => SearchRequestsAsync()); break;
+                    case "3": await RunSafelyAsync(() => SearchRequestsAsync(user.Role)); break;
                     case "4": await RunSafelyAsync(() => CommentsWorkflowAsync()); break;
                     default: UnknownChoice(); break;
                 }
@@ -275,7 +275,7 @@ internal sealed class ConsoleMenu
         Console.WriteLine($"Создана заявка #{created.Id}.");
     }
 
-    private async Task SearchRequestsAsync()
+    private async Task SearchRequestsAsync(string role)
     {
         Console.Write("Текст поиска (Enter — любой текст): ");
         var search = Console.ReadLine();
@@ -292,8 +292,22 @@ internal sealed class ConsoleMenu
         var toInput = Console.ReadLine();
         DateTime? to = ParseDate(toInput, endOfDay: true);
 
+        int? executorFilter = null;
+        var currentRole = role;
+        if (currentRole == RoleNames.Admin)
+        {
+            Console.Write("ID исполнителя (Enter — все; 0 — без исполнителя): ");
+            var executorInput = Console.ReadLine()?.Trim();
+            if (!string.IsNullOrEmpty(executorInput))
+            {
+                if (!int.TryParse(executorInput, out var parsedExecutor) || parsedExecutor < 0)
+                    throw new ArgumentException("ID исполнителя должен быть 0 или положительным числом.");
+                executorFilter = parsedExecutor;
+            }
+        }
+
         var results = await _api.GetRequestsAsync(
-            search, statusId, from: from, to: to);
+            search, statusId, executorFilter, from, to);
         await ShowRequestsAsync(results);
     }
 
