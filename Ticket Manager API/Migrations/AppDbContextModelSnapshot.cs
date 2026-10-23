@@ -39,6 +39,14 @@ namespace Ticket_manadger.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("CraatedAt");
 
+                    b.Property<int?>("ExecutorId")
+                        .HasColumnType("integer")
+                        .HasColumnName("executorId");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("integer")
+                        .HasColumnName("priority");
+
                     b.Property<int>("StatusId")
                         .HasColumnType("integer")
                         .HasColumnName("statusId");
@@ -58,10 +66,88 @@ namespace Ticket_manadger.Migrations
 
                     b.HasIndex("ClientId");
 
+                    b.HasIndex("ExecutorId", "StatusId");
+
                     b.HasIndex("StatusId");
+
+                    b.HasIndex("StatusId", "CraatedAt");
 
                     b.ToTable("requests");
                 });
+
+            modelBuilder.Entity("Ticket_manadger.RequestComment", b =>
+                {
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("createdAt");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("text");
+
+                    b.Property<int>("TicketId")
+                        .HasColumnType("integer")
+                        .HasColumnName("ticketId");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("userId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TicketId", "CreatedAt");
+
+                    b.ToTable("comments");
+                });
+
+            modelBuilder.Entity("Ticket_manadger.RequestHistory", b =>
+                {
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)")
+                        .HasColumnName("action");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("createdAt");
+
+                    b.Property<string>("Details")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("details");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("TicketId")
+                        .HasColumnType("integer")
+                        .HasColumnName("ticketId");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("userId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TicketId", "CreatedAt");
+
+                    b.ToTable("requestHistory");
+                });
+
+
 
             modelBuilder.Entity("Ticket_manadger.RequestStatus", b =>
                 {
@@ -160,18 +246,61 @@ namespace Ticket_manadger.Migrations
                     b.HasOne("Ticket_manadger.User", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Ticket_manadger.User", "Executor")
+                        .WithMany()
+                        .HasForeignKey("ExecutorId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Ticket_manadger.RequestStatus", "Status")
-                        .WithMany("Request")
+                        .WithMany()
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Client");
-
+                    b.Navigation("Executor");
                     b.Navigation("Status");
+                });
+
+
+
+            modelBuilder.Entity("Ticket_manadger.RequestComment", b =>
+                {
+                    b.HasOne("Ticket_manadger.Request", "Ticket")
+                        .WithMany()
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ticket_manadger.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+                    b.Navigation("Ticket");
+                });
+
+            modelBuilder.Entity("Ticket_manadger.RequestHistory", b =>
+                {
+                    b.HasOne("Ticket_manadger.Request", "Ticket")
+                        .WithMany()
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ticket_manadger.User", "Actor")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Actor");
+                    b.Navigation("Ticket");
                 });
 
             modelBuilder.Entity("Ticket_manadger.RequestStatus", b =>
