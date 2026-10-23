@@ -46,9 +46,16 @@ app.MapGet("/health", async (AppDbContext db) =>
 {
     try
     {
-        return await db.Database.CanConnectAsync()
-            ? Results.Ok(new { status = "ok", database = "connected" })
-            : Results.Problem("PostgreSQL is not reachable.", statusCode: 503);
+        if (!await db.Database.CanConnectAsync())
+            return Results.Problem("PostgreSQL is not reachable.", statusCode: 503);
+
+        var pending = (await db.Database.GetPendingMigrationsAsync()).ToArray();
+        if (pending.Length > 0)
+            return Results.Problem(
+                "Database has pending migrations: " + string.Join(", ", pending),
+                statusCode: 503);
+
+        return Results.Ok(new { status = "ok", database = "connected", migrations = "current" });
     }
     catch (Exception ex)
     {

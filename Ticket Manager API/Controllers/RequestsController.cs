@@ -154,6 +154,8 @@ namespace Ticket_manadger.Api.Controllers
             if (denied is not null) return denied;
             var request = _db.Requests.FirstOrDefault(item => item.Id == id);
             if (request is null) return NotFound();
+            if (request.StatusId == 3)
+                return Conflict(new { error = "Закрытую заявку нельзя взять в работу." });
             if (request.ExecutorId.HasValue && request.ExecutorId != UserId)
                 return Conflict(new { error = "Заявка уже назначена другому исполнителю." });
 

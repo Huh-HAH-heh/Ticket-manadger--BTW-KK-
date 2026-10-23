@@ -21,16 +21,16 @@ namespace Ticket_manadger.Migrations
                 type: "boolean", nullable: false, defaultValue: false);
 
             migrationBuilder.CreateIndex(
-                name: "IX_users_Email", table: "users", column: "email", unique: true);
+                name: "IX_users_email", table: "users", column: "email", unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_users_Login", table: "users", column: "login", unique: true);
+                name: "IX_users_login", table: "users", column: "login", unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(name: "IX_users_Email", table: "users");
-            migrationBuilder.DropIndex(name: "IX_users_Login", table: "users");
+            migrationBuilder.DropIndex(name: "IX_users_email", table: "users");
+            migrationBuilder.DropIndex(name: "IX_users_login", table: "users");
             migrationBuilder.DropColumn(name: "email", table: "users");
             migrationBuilder.DropColumn(name: "login", table: "users");
             migrationBuilder.DropColumn(name: "isDeleted", table: "users");
