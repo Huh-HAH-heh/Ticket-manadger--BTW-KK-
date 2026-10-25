@@ -1,3 +1,14 @@
+## Local full-stack deployment with Docker
+
+The recommended first deployment runs **PostgreSQL and Ticket Manager API in Docker** on your PC. Use [docs/DOCKER-LOCAL-SETUP.md](docs/DOCKER-LOCAL-SETUP.md).
+
+- Start: Start-TicketManager-Docker.cmd
+- First administrator: Create-TicketManager-Admin.cmd
+- Health check: http://127.0.0.1:5080/health
+- Stop without deleting data: docker compose down
+
+The console client remains a temporary Windows-side interface; the planned VK bot can replace it later. The API is bound to 127.0.0.1 only. The generated .env contains secrets and is ignored by Git. Never run docker compose down -v unless you intend to delete the Docker database volume.
+
 # Ticket Manager System
 
 ## Гайды для защиты

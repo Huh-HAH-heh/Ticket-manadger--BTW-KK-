@@ -1,0 +1,12 @@
+.git
+.vs
+.vscode
+.idea
+**/bin
+**/obj
+.env
+.env.*
+!/.env.example
+TicketManager-College.zip
+publish-client
+TicketManager-Backups

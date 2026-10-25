@@ -17,6 +17,13 @@ if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TICKET_API_TOK
         "Set TICKET_API_TOKEN_SECRET to a random value containing at least 32 UTF-8 bytes before starting the API.");
 }
 
+// Apply pending EF Core migrations when this local Docker API starts.
+using (var migrationScope = app.Services.CreateScope())
+{
+    var db = migrationScope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await db.Database.MigrateAsync();
+}
+
 app.Use(async (context, next) =>
 {
     var header = context.Request.Headers["Authorization"].ToString();

@@ -31,6 +31,11 @@ x86/
 *.local.json
 appsettings.Development.json
 
+# === Docker local secrets ===
+.env
+.env.*
+!.env.example
+
 # === Системные файлы ===
 .DS_Store
 Thumbs.db
