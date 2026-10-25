@@ -1,87 +1,90 @@
-# Local Ticket Manager deployment: PostgreSQL + API in Docker
+# Локальный запуск Ticket Manager через Docker
 
-## What this starts
+## Что запускается
 
-This is the recommended first deployment on your Windows PC:
+- PostgreSQL работает в отдельном Docker-контейнере.
+- Ticket Manager API работает во втором Docker-контейнере.
+- API доступен только с этого компьютера по адресу http://127.0.0.1:5080.
+- Данные PostgreSQL сохраняются в Docker volume ticket-manager-postgres-data даже после остановки контейнеров.
+- Консольный клиент временно запускается в Windows. В дальнейшем его можно заменить VK-ботом, не переписывая API и базу данных.
 
-- PostgreSQL runs in a Docker container.
-- Ticket Manager API runs in a separate Docker container.
-- The API is published only to 127.0.0.1 on the host, by default port 5080.
-- The database files live in the persistent Docker volume ticket-manager-postgres-data.
-- The existing console client runs on Windows as a temporary interface. The VK bot can replace that client later without replacing the API or database.
+Порт PostgreSQL наружу не публикуется. Не открывай порт 5432/5433 в роутере.
 
-The PostgreSQL port is not published to Windows or the internet. Do not open database port 5432/5433 in the router.
+## Первый запуск
 
-## First startup
+1. Установи и запусти Docker Desktop.
+2. Скачай и распакуй полную версию проекта из ветки feature/local-postgres-defense.
+3. Дважды щёлкни Start-TicketManager-Docker.cmd.
+4. При первом запуске скрипт создаст локальный файл .env со случайными секретами, соберёт образ API, запустит оба контейнера и дождётся применения миграций.
+5. Ключ первичной настройки администратора будет скопирован в буфер обмена. Не отправляй его другим и не добавляй .env в Git.
 
-1. Install and start Docker Desktop.
-2. Extract/clone the complete repository branch feature/local-postgres-defense.
-3. Double-click Start-TicketManager-Docker.cmd.
-4. On first launch, the script creates a local .env file with generated passwords and secrets, builds the API image, starts PostgreSQL and API, waits for migrations and the /health check.
-5. The bootstrap key for creating the first administrator is copied to the clipboard. The key is stored only in the ignored local .env file; do not commit or share it.
+Проверить состояние API можно в браузере: http://127.0.0.1:5080/health
 
-The API health response should contain:
-- status: ok
-- database: connected
-- migrations: current
+Успешный ответ должен содержать status=ok, database=connected и migrations=current.
 
-You can verify it in PowerShell:
+Если порт 5080 уже занят старым процессом API, останови этот процесс (Ctrl+C в его окне) либо измени TICKET_API_PORT в локальном файле .env на свободный порт.
 
-    Invoke-RestMethod http://127.0.0.1:5080/health | Format-List
+## Создание первого администратора
 
-If port 5080 is already used by an older API, stop that process or edit TICKET_API_PORT in .env to a free local port, then start again.
+1. Сначала дождись успешного запуска Start-TicketManager-Docker.cmd.
+2. Дважды щёлкни Create-TicketManager-Admin.cmd.
+3. Введи имя, логин, email и пароль администратора.
+4. Убедись, что консоль сообщила об успешном создании администратора.
+5. На вопрос о выключении первичной настройки введи Y. Скрипт удалит TICKET_BOOTSTRAP_KEY из .env и пересоздаст контейнер API. Обычный вход останется доступен.
 
-## Create the first administrator
+Не подтверждай отключение ключа, если администратор не был создан.
 
-Run Start-TicketManager-Docker.cmd first, then double-click Create-TicketManager-Admin.cmd. It starts the existing console client against the Docker API and supplies the one-time bootstrap key from .env. Enter the requested administrator name, login, email, and password.
+## Запуск консольного интерфейса
 
-After the console confirms successful creation, the script asks for confirmation. Type Y to remove TICKET_BOOTSTRAP_KEY from .env and recreate the API container. This disables first-admin setup while keeping normal login available. Do not confirm if the account was not created successfully.
+Дважды щёлкни Start-TicketManager-Console.cmd. Скрипт проверит состояние API и подключит консоль к нему.
 
-## Use the console client
-
-Double-click Start-TicketManager-Console.cmd to open the console client. It checks API health and connects to the configured local port.
-
-The host needs .NET 10 SDK for the temporary console client. If you prefer PowerShell, run:
+Для запуска вручную из PowerShell в корне проекта:
 
     $env:TICKET_API_URL = "http://127.0.0.1:5080"
-    dotnet run --project "./Ticket manadger/Ticket manadger.csproj" The PostgreSQL database and API themselves are built and run by Docker.
+    dotnet run --project "./Ticket manadger/Ticket manadger.csproj"
 
-## Routine commands
+Для консольного клиента на компьютере нужен .NET 10 SDK. База данных и API собираются и запускаются Docker.
 
-Show container status:
+## Повседневные команды
+
+Показать состояние контейнеров:
 
     docker compose ps
 
-View API logs:
+Посмотреть журнал API:
 
     docker compose logs -f api
 
-View database logs:
+Посмотреть журнал PostgreSQL:
 
     docker compose logs -f db
 
-Stop containers without deleting the database:
+Остановить контейнеры, сохранив базу:
 
     docker compose down
 
-Start them again:
+Запустить снова:
 
     docker compose up -d
 
-Rebuild the API after code changes:
+Пересобрать API после изменения кода:
 
     docker compose up --build -d
 
-The persistent volume is intentionally retained by docker compose down. **Do not use docker compose down -v** unless you intentionally want to delete all data in this Docker database.
+Команда docker compose down сохраняет том с данными. **Не используй docker compose down -v**, если не собираешься намеренно удалить эту Docker-базу.
 
-## Backups
+## Резервная копия базы
 
-For a PostgreSQL dump, use Backup-TicketManager-Docker.ps1 after configuring it for the correct local container/database, or run a tested pg_dump workflow. Store dumps outside the repository: they contain user data and password hashes.
+Создай каталог для резервных копий и выгрузи SQL-дамп из контейнера:
 
-## Troubleshooting
+    New-Item -ItemType Directory -Force "$env:USERPROFILE\TicketManager-Backups"
+    docker compose exec -T db pg_dump -U ticket_app ticket_db > "$env:USERPROFILE\TicketManager-Backups\ticket_db.sql"
 
-- Docker not available: start Docker Desktop and wait for its engine to be ready.
-- Build error: run docker compose build --no-cache api and inspect the first error.
-- API not ready: run docker compose logs --tail 100 api and docker compose logs --tail 50 db.
-- Health reports pending migrations: the API startup applies EF Core migrations automatically; review the API logs and restart with docker compose up -d after fixing the reported issue.
-- Port conflict: change TICKET_API_PORT in .env and restart with docker compose up --build -d.
+Дамп содержит данные пользователей, заявок и хэши паролей. Храни его вне репозитория и не загружай в публичный GitHub.
+
+## Если запуск не удался
+
+- Docker не найден или недоступен: запусти Docker Desktop и дождись готовности движка.
+- Ошибка сборки: выполни docker compose build --no-cache api и посмотри первую ошибку.
+- API не запустился: выполни docker compose logs --tail 100 api и docker compose logs --tail 50 db.
+- Порт занят: измени TICKET_API_PORT в .env и повтори запуск.

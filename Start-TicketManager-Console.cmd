@@ -1,9 +1,7 @@
 @echo off
 setlocal
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0Start-TicketManager-Console.ps1"
-if errorlevel 1 (
-  echo.
-  echo Ticket Manager console did not start. Read the error above.
-  pause
-)
+if errorlevel 1 echo Ticket Manager console did not start. Read the error above.
+echo.
+pause
 endlocal

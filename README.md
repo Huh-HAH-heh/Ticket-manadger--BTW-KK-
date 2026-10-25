@@ -1,16 +1,16 @@
-## Local full-stack deployment with Docker
-
-The recommended first deployment runs **PostgreSQL and Ticket Manager API in Docker** on your PC. Use [docs/DOCKER-LOCAL-SETUP.md](docs/DOCKER-LOCAL-SETUP.md).
-
-- Start services: Start-TicketManager-Docker.cmd
-- First administrator: Create-TicketManager-Admin.cmd
-- Open console client: Start-TicketManager-Console.cmd
-- Health check: http://127.0.0.1:5080/health
-- Stop without deleting data: docker compose down
-
-The console client remains a temporary Windows-side interface; the planned VK bot can replace it later. The API is bound to 127.0.0.1 only. The generated .env contains secrets and is ignored by Git. Never run docker compose down -v unless you intend to delete the Docker database volume.
-
 # Ticket Manager System
+
+## Локальный запуск через Docker
+
+Первый запуск выполняется локально: **PostgreSQL и Ticket Manager API работают в Docker**. Инструкция: [docs/DOCKER-LOCAL-SETUP.md](docs/DOCKER-LOCAL-SETUP.md).
+
+- Запустить PostgreSQL и API: Start-TicketManager-Docker.cmd
+- Создать первого администратора: Create-TicketManager-Admin.cmd
+- Открыть консольный интерфейс: Start-TicketManager-Console.cmd
+- Проверка API: http://127.0.0.1:5080/health
+- Остановить контейнеры без удаления БД: docker compose down
+
+Консоль пока остаётся интерфейсом пользователя; позднее её заменит VK-бот. API доступен только на локальном компьютере (127.0.0.1). Секреты хранятся в локальном файле .env, который исключён из Git. Не запускай docker compose down -v: эта команда удалит том с базой данных.
 
 ## Гайды для защиты
 
