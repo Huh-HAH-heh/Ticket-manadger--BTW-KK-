@@ -39,9 +39,7 @@ services:
 
 volumes:
   ticket_manager_postgres_data:
-    name: ticket-manager-postgres-data
 
 networks:
   ticket-manager-internal:
-    name: ticket-manager-internal
     driver: bridge
