@@ -2,8 +2,9 @@
 
 The recommended first deployment runs **PostgreSQL and Ticket Manager API in Docker** on your PC. Use [docs/DOCKER-LOCAL-SETUP.md](docs/DOCKER-LOCAL-SETUP.md).
 
-- Start: Start-TicketManager-Docker.cmd
+- Start services: Start-TicketManager-Docker.cmd
 - First administrator: Create-TicketManager-Admin.cmd
+- Open console client: Start-TicketManager-Console.cmd
 - Health check: http://127.0.0.1:5080/health
 - Stop without deleting data: docker compose down
 

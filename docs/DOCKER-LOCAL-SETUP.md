@@ -39,12 +39,12 @@ After the console confirms successful creation, the script asks for confirmation
 
 ## Use the console client
 
-Open PowerShell in the repository folder and run:
+Double-click Start-TicketManager-Console.cmd to open the console client. It checks API health and connects to the configured local port.
+
+The host needs .NET 10 SDK for the temporary console client. If you prefer PowerShell, run:
 
     $env:TICKET_API_URL = "http://127.0.0.1:5080"
-    dotnet run --project "./Ticket manadger/Ticket manadger.csproj"
-
-The host needs .NET 10 SDK for the temporary console client. The PostgreSQL database and API themselves are built and run by Docker.
+    dotnet run --project "./Ticket manadger/Ticket manadger.csproj" The PostgreSQL database and API themselves are built and run by Docker.
 
 ## Routine commands
 
