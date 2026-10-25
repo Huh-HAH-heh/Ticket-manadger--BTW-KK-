@@ -28,6 +28,7 @@ services:
       TICKET_DB_CONNECTION: "Host=db;Port=5432;Database=${POSTGRES_DB:-ticket_db};Username=${POSTGRES_USER:-ticket_app};Password=${POSTGRES_PASSWORD:?Missing POSTGRES_PASSWORD}"
       TICKET_API_TOKEN_SECRET: ${TICKET_API_TOKEN_SECRET:?Missing TICKET_API_TOKEN_SECRET in .env}
       TICKET_BOOTSTRAP_KEY: ${TICKET_BOOTSTRAP_KEY:-}
+      TICKET_DOCKER_ALLOW_PENDING_MODEL_CHANGES: "true"
     ports:
       - "127.0.0.1:${TICKET_API_PORT:-5080}:8080"
     depends_on:

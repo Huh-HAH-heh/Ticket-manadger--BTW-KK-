@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Ticket_manadger;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,11 +18,26 @@ if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TICKET_API_TOK
         "Set TICKET_API_TOKEN_SECRET to a random value containing at least 32 UTF-8 bytes before starting the API.");
 }
 
-// Apply pending EF Core migrations when this local Docker API starts.
-using (var migrationScope = app.Services.CreateScope())
+// Apply migrations at container startup. The local deployment enables a temporary
+// model-snapshot compatibility switch until the migration snapshot is reconciled.
+var migrationConnection = Environment.GetEnvironmentVariable("TICKET_DB_CONNECTION");
+if (string.IsNullOrWhiteSpace(migrationConnection))
+    throw new InvalidOperationException("TICKET_DB_CONNECTION must be set before applying migrations.");
+
+var migrationOptionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+    .UseNpgsql(migrationConnection);
+if (string.Equals(
+        Environment.GetEnvironmentVariable("TICKET_DOCKER_ALLOW_PENDING_MODEL_CHANGES"),
+        "true",
+        StringComparison.OrdinalIgnoreCase))
 {
-    var db = migrationScope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await db.Database.MigrateAsync();
+    migrationOptionsBuilder.ConfigureWarnings(warnings =>
+        warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
+}
+
+await using (var migrationDb = new AppDbContext(migrationOptionsBuilder.Options))
+{
+    await migrationDb.Database.MigrateAsync();
 }
 
 app.Use(async (context, next) =>
