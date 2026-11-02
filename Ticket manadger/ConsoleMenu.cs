@@ -394,16 +394,48 @@ internal sealed class ConsoleMenu
     {
         var id = ReadPositiveInt("ID заявки: ");
         var comments = await _api.GetCommentsAsync(id);
+        PrintComments(comments);
+
+        while (true)
+        {
+            Console.Write("Добавить комментарий? (1 — да, 0 — нет): ");
+            var answer = Console.ReadLine()?.Trim().ToLowerInvariant();
+
+            if (answer is "0" or "н" or "нет" or "n" or "no")
+            {
+                Console.WriteLine("Добавление комментария отменено.");
+                return;
+            }
+
+            if (answer is "1" or "д" or "да" or "y" or "yes")
+                break;
+
+            Console.WriteLine("Введите 1 (да) или 0 (нет).");
+        }
+
+        string text;
+        while (true)
+        {
+            text = ReadRequired("Текст комментария (до 5000 символов): ");
+            if (text.Length <= 5000) break;
+            Console.WriteLine("Комментарий не должен превышать 5000 символов.");
+        }
+
+        var added = await _api.AddCommentAsync(id, text);
+        Console.WriteLine($"Комментарий добавлен ({added.CreatedAt:yyyy-MM-dd HH:mm}).");
+
+        comments = await _api.GetCommentsAsync(id);
+        PrintComments(comments);
+    }
+
+    private static void PrintComments(List<ConsoleComment> comments)
+    {
         Console.WriteLine("КОММЕНТАРИИ");
-        if (comments.Count == 0) Console.WriteLine("Комментариев пока нет.");
+        if (comments.Count == 0)
+            Console.WriteLine("Комментариев пока нет.");
+
         foreach (var item in comments)
             Console.WriteLine($"[{item.CreatedAt:yyyy-MM-dd HH:mm}] {item.Author}: {item.Text}");
-
-        Console.Write("Добавить комментарий? (Д/н): ");
-        if (!string.Equals(Console.ReadLine()?.Trim(), "Д", StringComparison.OrdinalIgnoreCase))
-            return;
-        var added = await _api.AddCommentAsync(id, ReadRequired("Текст комментария (до 5000 символов): "));
-        Console.WriteLine($"Комментарий добавлен ({added.CreatedAt:yyyy-MM-dd HH:mm}).");
     }
 
     private async Task ShowHistoryAsync()
