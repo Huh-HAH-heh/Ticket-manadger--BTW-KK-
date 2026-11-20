@@ -58,11 +58,11 @@ https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/archive/refs/heads/featu
 
 Запусти PowerShell из корня полного проекта:
 
-    powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Backup-TicketManager-Native.ps1
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\legacy/native/Backup-TicketManager-Native.ps1
 
 По умолчанию дамп сохраняется в %USERPROFILE%\TicketManager-Backups, рядом создаётся SHA-256. Скопируй дамп отдельно на флешку или в приватное хранилище. Не помещай его в публичный GitHub.
 
-Сценарий устанавливает **отдельную пустую базу**. Он не переносит автоматически данные из контейнера ticket-postgres. Если важно сохранить заявки из Docker-варианта, сначала создай дамп через Backup-TicketManager-Docker.ps1, а восстановление в новую базу выполняй только по отдельной инструкции; не перезаписывай существующую базу наугад.
+Сценарий устанавливает **отдельную пустую базу**. Он не переносит автоматически данные из контейнера ticket-postgres. Если важно сохранить заявки из Docker-варианта, сначала создай дамп через scripts/Backup-TicketManager-Docker.ps1, а восстановление в новую базу выполняй только по отдельной инструкции; не перезаписывай существующую базу наугад.
 
 ## Проверка готовности
 
