@@ -62,7 +62,7 @@ https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/archive/refs/heads/main.
 - Код до локальных установочных изменений: [backup/defense-2026-10-24-stage5](https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/tree/ff99b0335b5002a394e488c51163e701f3d9536a).
 - Снимок кода вместе с двумя гайдами и установочными сценариями: [backup/defense-2026-10-24-guides-final](https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/tree/5ba3b78eb53b4358cd5c57eb45581560cef0b2aa).
 - Ветка текущих сценариев: [feature/local-postgres-defense](https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/tree/b4fb1fc9ee4c74711e3285539002c7ce379cb2dd).
-- Backup Docker-базы: scripts/Backup-TicketManager-Docker.ps1.
-- Backup нативной Windows-базы: legacy/native/Backup-TicketManager-Native.ps1.
+- Backup Docker-базы: `scripts/Backup-TicketManager-Docker.ps1`.
+- Backup нативной Windows-базы: `legacy/native/Backup-TicketManager-Native.ps1`.
 
 GitHub хранит исходный код, но не архив реальной базы. Храни код и дампы отдельно.
