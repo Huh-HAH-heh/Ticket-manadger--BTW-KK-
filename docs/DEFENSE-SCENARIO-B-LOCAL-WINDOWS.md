@@ -26,7 +26,7 @@ API слушает только 127.0.0.1. PostgreSQL не выставляет�
 
 Загрузи полный ZIP ветки feature/local-postgres-defense:
 
-https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/archive/refs/heads/feature/local-postgres-defense.zip
+https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/archive/refs/heads/main.zip
 
 Распакуй его в обычную папку, например Documents\TicketManager. Не запускай установщик из архиватора, сначала полностью распакуй каталог.
 
@@ -44,7 +44,7 @@ https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/archive/refs/heads/featu
 
 ## Последующие запуски
 
-Дважды щёлкни Start-TicketManager-OneClick.cmd снова. После успешной первой установки он распознает состояние и запустит локальный API с консольным приложением.
+Дважды щёлкни `legacy/native/Start-TicketManager-OneClick.cmd` снова. После успешной первой установки он распознает состояние и запустит локальный API с консольным приложением.
 
 Если нужно запустить именно существующую установку без проверки первого запуска, можно использовать Start-TicketManager-Native.cmd.
 
@@ -62,7 +62,7 @@ https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/archive/refs/heads/featu
 
 По умолчанию дамп сохраняется в %USERPROFILE%\TicketManager-Backups, рядом создаётся SHA-256. Скопируй дамп отдельно на флешку или в приватное хранилище. Не помещай его в публичный GitHub.
 
-Сценарий устанавливает **отдельную пустую базу**. Он не переносит автоматически данные из контейнера ticket-postgres. Если важно сохранить заявки из Docker-варианта, сначала создай дамп через scripts/Backup-TicketManager-Docker.ps1, а восстановление в новую базу выполняй только по отдельной инструкции; не перезаписывай существующую базу наугад.
+Сценарий устанавливает **отдельную пустую базу**. Он не переносит автоматически данные из контейнера ticket-postgres. Если важно сохранить заявки из Docker-варианта, сначала создай дамп через scripts\\Backup-TicketManager-Docker.ps1, а восстановление в новую базу выполняй только по отдельной инструкции; не перезаписывай существующую базу наугад.
 
 ## Проверка готовности
 
