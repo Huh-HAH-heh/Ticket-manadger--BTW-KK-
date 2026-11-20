@@ -8,5 +8,7 @@ The native scripts are preserved for the older defense scenario. They require ad
 
 - `Start-TicketManager-OneClick.cmd` — first-time native installation and subsequent launch.
 - `Start-TicketManager-Native.cmd` — direct launch after native installation.
+- `Install-TicketManager-Native.ps1` — native PostgreSQL installer.
+- `Backup-TicketManager-Native.ps1` — backup utility for that separate database.
 
-The scripts call their existing implementation in the repository root; the source and state paths remain unchanged.
+The shared native API startup helper is in `scripts/Start-TicketManager-Native.ps1`. Source projects and API code remain in the repository root.
