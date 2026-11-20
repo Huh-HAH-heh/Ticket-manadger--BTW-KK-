@@ -32,7 +32,7 @@ https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/archive/refs/heads/featu
 
 ## Первая установка — один запускатель
 
-1. Дважды щёлкни Start-TicketManager-OneClick.cmd в корне распакованного проекта.
+1. Дважды щёлкни `legacy/native/Start-TicketManager-OneClick.cmd` в распакованном проекте.
 2. Если Windows запросит подтверждение UAC, подтверди установку, если на этом компьютере у тебя есть соответствующие права.
 3. Установщик проверит .NET 10 SDK, установит PostgreSQL 16 без Docker, выберет свободный порт среди 5432, 5434, 5435, 5436, создаст служебную роль ticket_app и базу ticket_db.
 4. Скрипт восстановит NuGet-зависимости, применит EF Core migrations, соберёт API и клиент.
