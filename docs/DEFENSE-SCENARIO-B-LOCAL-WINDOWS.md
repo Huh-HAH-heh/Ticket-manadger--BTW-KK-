@@ -24,7 +24,7 @@ API слушает только 127.0.0.1. PostgreSQL не выставляет�
 
 Нужен **полный исходный код**, в котором есть каталоги Ticket Manager API, Ticket manadger и миграции. Клиентский TicketManager-College.zip здесь не подходит: в нём только консольное приложение и нет сервера или установщика базы.
 
-Загрузи полный ZIP ветки feature/local-postgres-defense:
+Загрузи полный ZIP основной ветки main:
 
 https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/archive/refs/heads/main.zip
 
