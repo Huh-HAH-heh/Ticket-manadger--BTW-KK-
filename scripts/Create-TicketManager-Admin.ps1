@@ -5,7 +5,7 @@ Set-Location -LiteralPath $Root
 
 $EnvPath = Join-Path $Root '.env'
 if (-not (Test-Path -LiteralPath $EnvPath)) {
-    throw 'Missing .env. Run Start-TicketManager-Docker.cmd first.'
+    throw 'Missing .env. Run Start-TicketManager.cmd first.'
 }
 $Lines = Get-Content -LiteralPath $EnvPath
 $KeyLine = $Lines | Where-Object { $_.StartsWith('TICKET_BOOTSTRAP_KEY=') } | Select-Object -First 1
