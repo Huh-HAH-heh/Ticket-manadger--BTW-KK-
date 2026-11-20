@@ -22,7 +22,7 @@ GitHub backup-ветка сохраняет исходный код, а не к�
 
 Для локальных дампов предусмотрены два сценария:
 
-- Docker PostgreSQL: Backup-TicketManager-Docker.ps1.
-- PostgreSQL, установленный без Docker: Backup-TicketManager-Native.ps1.
+- Docker PostgreSQL: scripts/Backup-TicketManager-Docker.ps1.
+- PostgreSQL, установленный без Docker: legacy/native/Backup-TicketManager-Native.ps1.
 
 Оба сценария по умолчанию сохраняют файлы в %USERPROFILE%\TicketManager-Backups и создают рядом контрольную сумму SHA-256. Копируй этот каталог отдельно на флешку или в приватное хранилище. Не добавляй .dump, .env, файл состояния DPAPI или секреты в Git.
