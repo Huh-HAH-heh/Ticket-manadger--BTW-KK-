@@ -96,5 +96,5 @@ Write-Host ''
 Write-Host 'Ticket Manager API is running.' -ForegroundColor Green
 Write-Host "Health: http://127.0.0.1:$ApiPort/health"
 Write-Host 'PostgreSQL is running in Docker with a persistent named volume.'
-Write-Host 'To create the first administrator, run Create-TicketManager-Admin.cmd.'
+Write-Host 'For first-time setup, run Start-TicketManager.cmd and complete administrator creation in the console.'
 Write-Host 'To stop the services without deleting the database, run: docker compose down'
