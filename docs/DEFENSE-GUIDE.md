@@ -32,7 +32,7 @@
 **Какой архив использовать:** полный ZIP исходного проекта из ветки feature/local-postgres-defense:
 https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/archive/refs/heads/feature/local-postgres-defense.zip
 
-После распаковки запускается Start-TicketManager-OneClick.cmd. Не используй для этого варианта TicketManager-College.zip — в нём находится только консольный клиент.
+После распаковки запускается `legacy/native/Start-TicketManager-OneClick.cmd`. Это отдельный устаревший сценарий; для обычной демонстрации используй `Start-TicketManager.cmd` и Docker. Не используй для этого варианта TicketManager-College.zip — в нём находится только консольный клиент.
 
 **Минус:** первая установка требует прав администратора, интернета и места для PostgreSQL/.NET-зависимостей. На компьютере колледжа сначала уточни, разрешена ли установка программ.
 
