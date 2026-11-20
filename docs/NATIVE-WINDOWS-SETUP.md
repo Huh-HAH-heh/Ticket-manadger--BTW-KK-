@@ -7,7 +7,7 @@
 ## Кратко
 
 1. Скачай и полностью распакуй полный ZIP исходного проекта ветки feature/local-postgres-defense:
-   https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/archive/refs/heads/feature/local-postgres-defense.zip
+   https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/archive/refs/heads/main.zip
 2. В распакованном проекте запусти `legacy/native/Start-TicketManager-OneClick.cmd`.
 3. Подтверди UAC при запросе Windows. Для первой установки нужны права администратора и интернет.
 4. Дождись завершения установки PostgreSQL 16 как службы Windows, миграций и сборки.
@@ -20,8 +20,8 @@
 
 - Локальная база создаётся отдельно и не импортирует автоматически данные Docker-контейнера.
 - Локальные параметры хранятся в %LOCALAPPDATA%\TicketManager-Native\state.json, секреты защищены Windows DPAPI текущей учётной записи.
-- Для резервной копии локальной базы запускай legacy/native/Backup-TicketManager-Native.ps1.
-- Для резервной копии существующего Docker-контейнера запускай scripts/Backup-TicketManager-Docker.ps1.
+- Для резервной копии локальной базы запускай `./legacy/native/Backup-TicketManager-Native.ps1`.
+- Для резервной копии существующего Docker-контейнера запускай `./scripts/Backup-TicketManager-Docker.ps1`.
 - Не коммить дампы базы, файл state.json, пароли или токены в публичный GitHub.
 
 ## Ограничения
