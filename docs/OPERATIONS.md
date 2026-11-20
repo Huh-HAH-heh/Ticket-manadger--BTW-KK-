@@ -95,7 +95,7 @@ docker compose up -d
 Для резервного копирования Docker-базы можно использовать:
 
 ```powershell
-.\Backup-TicketManager-Docker.ps1
+.\scripts\Backup-TicketManager-Docker.ps1
 ```
 
 Либо самостоятельно создать SQL-дамп:
@@ -131,6 +131,8 @@ docker compose exec -T db pg_dump -U ticket_app ticket_db > "$env:USERPROFILE\Ti
 | Порт 5080 занят | Изменить `TICKET_API_PORT` в локальном `.env` и повторить запуск |
 | Консоль не запускается | Проверить наличие .NET 10 SDK |
 | Не удаётся создать администратора | Проверить наличие непустого `TICKET_BOOTSTRAP_KEY` в `.env` и повторить запуск |
+
+Резервная копия старой Native-установки, если она всё ещё используется, находится в `legacy/native/Backup-TicketManager-Native.ps1`.
 
 ## 10. Альтернативный режим
 
