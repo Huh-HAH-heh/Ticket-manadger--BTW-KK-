@@ -46,7 +46,7 @@ https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/archive/refs/heads/main.
 
 Дважды щёлкни `legacy/native/Start-TicketManager-OneClick.cmd` снова. После успешной первой установки он распознает состояние и запустит локальный API с консольным приложением.
 
-Если нужно запустить именно существующую установку без проверки первого запуска, можно использовать Start-TicketManager-Native.cmd.
+Если нужно запустить именно существующую установку без проверки первого запуска, можно использовать `legacy/native/Start-TicketManager-Native.cmd`.
 
 Локальное состояние хранится в:
 
