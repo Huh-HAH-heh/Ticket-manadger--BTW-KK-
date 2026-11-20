@@ -192,4 +192,4 @@ TicketManager-College.zip — это только переносимый кли�
 - Окно API и окно cloudflared должны оставаться открытыми.
 - Если URL туннеля изменился, повторно собери TicketManager-College.zip с новым адресом.
 - Не используй реальные персональные данные: Quick Tunnel предназначен для временной демонстрации, не для production.
-- Для дампа Docker-базы используй Backup-TicketManager-Docker.ps1. Храни дамп отдельно от GitHub.
+- Для дампа Docker-базы используй scripts/Backup-TicketManager-Docker.ps1. Храни дамп отдельно от GitHub.
