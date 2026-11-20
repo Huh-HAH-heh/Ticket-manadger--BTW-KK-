@@ -8,6 +8,8 @@ Git хранит историю проекта в основной ветке `m
 - Снимок с инструкциями защиты: [5ba3b78e](https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/tree/5ba3b78eb53b4358cd5c57eb45581560cef0b2aa).
 - Сценарий локального PostgreSQL: [b4fb1fc9](https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/tree/b4fb1fc9ee4c74711e3285539002c7ce379cb2dd).
 
+Старая экспериментальная настройка PostgreSQL 18, имевшая два уникальных коммита, сохранена отдельно в [archive/stage-5-db-setup-pg18](https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/tree/archive/stage-5-db-setup-pg18). Она не является текущим сценарием запуска.
+
 Эти SHA — исторические контрольные точки, а не текущие точки разработки. Основная разработка и демонстрация ведутся из `main`.
 
 ## Резервные копии PostgreSQL
