@@ -9,7 +9,7 @@ if exist "%READY%" (
 ) else (
   echo First run: installing PostgreSQL as a Windows service.
   echo This legacy mode is not the default portfolio setup.
-  powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ROOT%Install-TicketManager-Native.ps1"
+  powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0Install-TicketManager-Native.ps1"
 )
 
 if errorlevel 1 (
