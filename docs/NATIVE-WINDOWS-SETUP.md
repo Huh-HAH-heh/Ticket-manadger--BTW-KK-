@@ -20,8 +20,8 @@
 
 - Локальная база создаётся отдельно и не импортирует автоматически данные Docker-контейнера.
 - Локальные параметры хранятся в %LOCALAPPDATA%\TicketManager-Native\state.json, секреты защищены Windows DPAPI текущей учётной записи.
-- Для резервной копии локальной базы запускай Backup-TicketManager-Native.ps1.
-- Для резервной копии существующего Docker-контейнера запускай Backup-TicketManager-Docker.ps1.
+- Для резервной копии локальной базы запускай legacy/native/Backup-TicketManager-Native.ps1.
+- Для резервной копии существующего Docker-контейнера запускай scripts/Backup-TicketManager-Docker.ps1.
 - Не коммить дампы базы, файл state.json, пароли или токены в публичный GitHub.
 
 ## Ограничения
