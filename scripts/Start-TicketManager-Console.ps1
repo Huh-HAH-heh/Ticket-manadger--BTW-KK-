@@ -4,7 +4,7 @@ $Root = Split-Path -Parent $PSScriptRoot
 Set-Location -LiteralPath $Root
 $EnvPath = Join-Path $Root '.env'
 if (-not (Test-Path -LiteralPath $EnvPath)) {
-    throw 'Run Start-TicketManager-Docker.cmd first.'
+    throw 'Run Start-TicketManager.cmd first.'
 }
 $Lines = Get-Content -LiteralPath $EnvPath
 $PortLine = $Lines | Where-Object { $_ -match '^TICKET_API_PORT=' } | Select-Object -First 1
@@ -20,7 +20,7 @@ try {
         throw 'API health check did not confirm a connected database and current migrations.'
     }
 } catch {
-    throw "Ticket Manager API is not ready. Start it with Start-TicketManager-Docker.cmd. Details: $($_.Exception.Message)"
+    throw "Ticket Manager API is not ready. Start it with Start-TicketManager.cmd. Details: $($_.Exception.Message)"
 }
 Write-Host "Connected to Ticket Manager API at $env:TICKET_API_URL" -ForegroundColor Green
 dotnet run --project "./Ticket manadger/Ticket manadger.csproj"
