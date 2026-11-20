@@ -1,6 +1,6 @@
 @echo off
 setlocal
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0Start-TicketManager.ps1"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\Start-TicketManager.ps1"
 set "APP_EXIT=%ERRORLEVEL%"
 if not "%APP_EXIT%"=="0" (
   echo.
