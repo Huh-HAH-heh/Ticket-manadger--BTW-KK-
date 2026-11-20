@@ -8,11 +8,11 @@
 
 1. Скачай и полностью распакуй полный ZIP исходного проекта ветки feature/local-postgres-defense:
    https://github.com/Huh-HAH-heh/Ticket-manadger--BTW-KK-/archive/refs/heads/feature/local-postgres-defense.zip
-2. В корне проекта запусти Start-TicketManager-OneClick.cmd.
+2. В распакованном проекте запусти `legacy/native/Start-TicketManager-OneClick.cmd`.
 3. Подтверди UAC при запросе Windows. Для первой установки нужны права администратора и интернет.
 4. Дождись завершения установки PostgreSQL 16 как службы Windows, миграций и сборки.
 5. При первом запуске создай администратора в консоли.
-6. Для следующих запусков снова используй Start-TicketManager-OneClick.cmd.
+6. Для следующих запусков снова используй `legacy/native/Start-TicketManager-OneClick.cmd`.
 
 Не путай полный ZIP проекта с TicketManager-College.zip: последний содержит только консольный клиент для сценария с домашним API и Cloudflare Tunnel.
 
